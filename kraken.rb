@@ -1,6 +1,8 @@
 require 'httparty'
 require 'securerandom'
 require 'hashie'
+require 'Base64'
+require 'open-uri'
 
 module Kraken
   class Client
@@ -44,24 +46,53 @@ module Kraken
       get_public 'Depth', opts
     end
 
-    def get_public(path, opts={})
-      url = @base_uri + @api_version + '/public/' + path
-      p url
+    # must give asset pair
+    def trades(opts={})
+      get_public 'Trades', opts
+    end
+
+    def spread(opts={})
+      get_public 'Spread', opts
+    end
+
+    def make_request verb, opts={}
+
+    end
+
+    def get_public(method, opts={})
+      url = @base_uri + @api_version + '/public/' + method
       r = self.class.get(url, query: opts)
       hash = Hashie::Mash.new(JSON.parse(r.body))
       hash[:result]
     end
 
     def post_private(path, opts={})
+      urlpath = '/' + @api_version + '/private/' + method
+      key = Base64.encode64(@api_secret)
+      opts['nonce'] = Time.now.to_i * 1000
+      post_data = JSON.encode(opts)
+      message = urlpath + OpenSSL::Digest.new('sha256', opts['nonce'].to_s + post_data)
+      signature = OpenSSL::HMAC.hexdigest(OpenSSL::Digest::Digest.new('sha512'), key, message)
 
+      headers = {
+        'API-Key': @api_key,
+        'API-Sign': signature
+      }
+
+      post_data = {
+        nonce: opts['nonce']
+      }
     end
 
   end
 end
 
 kraken = Kraken::Client.new
-p kraken.server_time
+# p kraken.server_time
 # p kraken.assets
 # p kraken.asset_pairs({info: 'margin'})
 # p kraken.ticker({ pair: 'LTCXRP, XXBTZEUR' })
-p kraken.order_book({ pair: 'LTCXRP' })
+# p kraken.order_book({ pair: 'LTCXRP' })
+
+# p kraken.trades({ pair: 'LTCXRP' })
+p kraken.spread({ pair: 'LTCXRP' })
