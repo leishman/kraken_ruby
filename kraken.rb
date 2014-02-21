@@ -3,6 +3,9 @@ require 'securerandom'
 require 'hashie'
 require 'Base64'
 require 'open-uri'
+require 'addressable/uri'
+
+require 'debugger'
 
 module Kraken
   class Client
@@ -55,8 +58,16 @@ module Kraken
       get_public 'Spread', opts
     end
 
-    def make_request verb, opts={}
+    ######################
+    ##### Private Data ###
+    ######################
 
+    def balance(opts={})
+      post_private 'Balance', opts
+    end
+
+    def trade_balance(opts={})
+      post_private 'TradeBalance', opts
     end
 
     def get_public(method, opts={})
@@ -66,33 +77,36 @@ module Kraken
       hash[:result]
     end
 
-    def post_private(path, opts={})
+    def encode_options(opts)
+      uri = Addressable::URI.new
+      uri.query_values = opts
+      uri.query
+    end
+
+    def post_private(method, opts={})
       urlpath = '/' + @api_version + '/private/' + method
-      key = Base64.encode64(@api_secret)
-      opts['nonce'] = Time.now.to_i * 1000
-      post_data = JSON.encode(opts)
-      message = urlpath + OpenSSL::Digest.new('sha256', opts['nonce'].to_s + post_data)
-      signature = OpenSSL::HMAC.hexdigest(OpenSSL::Digest::Digest.new('sha512'), key, message)
+
+      key_b64 = Base64.decode64(@api_secret)
+      opts['nonce'] = Time.now.to_i * 10_000_000_000
+      # opts['otp'] = ''
+
+      post_data = encode_options(opts)
+      opt_digest = OpenSSL::Digest.new('sha256', opts['nonce'].to_s + post_data).digest
+      message = urlpath + opt_digest
+      digest = OpenSSL::Digest::Digest.new('sha512')
+      signature = OpenSSL::HMAC.digest(digest, key_b64, message)
 
       headers = {
-        'API-Key': @api_key,
-        'API-Sign': signature
+        'User-Agent' => 'leishman',
+        'API-Key' => @api_key,
+        'API-Sign' => Base64.encode64(signature)
       }
 
-      post_data = {
-        nonce: opts['nonce']
-      }
+      url = @base_uri + @api_version + '/private/' + method
+      r = self.class.post(url, { headers: headers, body: post_data })
+
     end
 
   end
 end
 
-kraken = Kraken::Client.new
-# p kraken.server_time
-# p kraken.assets
-# p kraken.asset_pairs({info: 'margin'})
-# p kraken.ticker({ pair: 'LTCXRP, XXBTZEUR' })
-# p kraken.order_book({ pair: 'LTCXRP' })
-
-# p kraken.trades({ pair: 'LTCXRP' })
-p kraken.spread({ pair: 'LTCXRP' })
