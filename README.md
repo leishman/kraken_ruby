@@ -46,6 +46,11 @@ time = kraken.server_time
 time.unixtime #=> 1393056191
 time.rfc1123 #=> "Sat, 22 Feb 2014 08:28:04 GMT"
 ```
+
+#### Asset Info
+
+Returns the assets that can be traded on the exchange. This method can be passed ```info```, ```aclass``` (asset class), and ```asset``` options. An example below is given for each:
+
 ## Contributing
 
 1. Fork it
