@@ -31,7 +31,7 @@ API_SECRET = 'wQG+7Lr9b.....'
 kraken = Kraken::Client.new(API_KEY, API_SECRET)
 
 time_obj = kraken.server_time
-time_obj.unixtime # => 1393056191
+time_obj.unixtime #=> 1393056191
 ```
 
 ## Contributing
