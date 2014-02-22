@@ -51,6 +51,45 @@ time.rfc1123 #=> "Sat, 22 Feb 2014 08:28:04 GMT"
 
 Returns the assets that can be traded on the exchange. This method can be passed ```info```, ```aclass``` (asset class), and ```asset``` options. An example below is given for each:
 
+```ruby
+kraken.assets
+```
+
+#### Asset Pairs
+
+```ruby
+pairs = kraken.asset_pairs
+```
+
+#### Ticker Information
+
+```ruby
+ticker_data = kraken.ticker('XLTCXXDG, ZUSDXXVN')
+```
+
+#### Order Book
+
+Get market depth information for given asset pairs
+
+```ruby
+depth_data = kraken.order_book('LTCXRP')
+```
+
+#### Trades
+
+Get recent trades
+
+```ruby
+trades = kraken.trades('LTCXRP')
+```
+
+#### Spread
+
+Get spread data for a given asset pair
+
+```ruby
+spread = kraken.spread('LTCXRP')
+```
 ## Contributing
 
 1. Fork it
