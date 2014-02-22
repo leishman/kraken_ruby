@@ -30,10 +30,20 @@ API_SECRET = 'wQG+7Lr9b.....'
 
 kraken = Kraken::Client.new(API_KEY, API_SECRET)
 
-time_obj = kraken.server_time
-time_obj.unixtime #=> 1393056191
+time = kraken.server_time
+time.unixtime #=> 1393056191
 ```
 
+### Public Data Methods
+
+#### Server Time
+
+```ruby
+time = kraken.server_time
+
+time.unixtime #=> 1393056191
+time.rfc1123 #=> "Sat, 22 Feb 2014 08:28:04 GMT"
+```
 ## Contributing
 
 1. Fork it
