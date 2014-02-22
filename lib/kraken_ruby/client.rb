@@ -1,6 +1,10 @@
-require 'kraken_ruby/version'
 require 'httparty'
+require 'securerandom'
 require 'hashie'
+require 'Base64'
+require 'open-uri'
+require 'addressable/uri'
+
 
 module Kraken
   class Client
@@ -56,10 +60,53 @@ module Kraken
       hash[:result]
     end
 
-    ###############################
-    ###### Private Data: ##########
-    ### Coming in Next Release ####
-    ###############################
+    ######################
+    ##### Private Data ###
+    ######################
+
+    def balance(opts={})
+      post_private 'Balance', opts
+    end
+
+    def trade_balance(opts={})
+      post_private 'TradeBalance', opts
+    end
+
+    def get_public(method, opts={})
+      url = @base_uri + @api_version + '/public/' + method
+      r = self.class.get(url, query: opts)
+      hash = Hashie::Mash.new(JSON.parse(r.body))
+      hash[:result]
+    end
+
+    def encode_options(opts)
+      uri = Addressable::URI.new
+      uri.query_values = opts
+      uri.query
+    end
+
+      #### IN PROGRESS #######
+    def post_private(method, opts={})
+      urlpath = '/' + @api_version + '/private/' + method
+
+      key_b64 = Base64.decode64(@api_secret)
+      opts['nonce'] = Time.now.to_i * 10_000_000_000
+
+      post_data = encode_options(opts)
+      opt_digest = OpenSSL::Digest.new('sha256', opts['nonce'].to_s + post_data).digest
+      message = urlpath + opt_digest
+      digest = OpenSSL::Digest::Digest.new('sha512')
+      signature = OpenSSL::HMAC.digest(digest, key_b64, message)
+
+      headers = {
+        'User-Agent' => 'leishman',
+        'API-Key' => @api_key,
+        'API-Sign' => Base64.encode64(signature)
+      }
+
+      url = @base_uri + @api_version + '/private/' + method
+      self.class.post(url, { headers: headers, body: post_data })
+    end
 
   end
 end
