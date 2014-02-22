@@ -1,10 +1,5 @@
-require "kraken_ruby/version"
+require 'kraken_ruby/version'
 require 'httparty'
-require 'securerandom'
-require 'hashie'
-require 'Base64'
-require 'open-uri'
-require 'addressable/uri'
 
 module Kraken
   class Client
@@ -21,9 +16,6 @@ module Kraken
     ###### Public Data ########
     ###########################
 
-    # gets kraken server time
-    # returns object with rfc1123 or UNIX time
-    
     def server_time
       get_public 'Time'
     end
@@ -36,29 +28,23 @@ module Kraken
       get_public 'AssetPairs', opts
     end
 
-    # must pass comma separated list of asset pairs
-
-    def ticker(opts={})
+    def ticker(pairs) # takes string of comma delimited pairs
+      opts = { 'pair' => pairs }
       get_public 'Ticker', opts
     end
-
-    # must give asset pair
-    # optional count
-    # example opts: { pair: 'LTCXRP', count: 5}
     
-    def order_book(opts={})
+    def order_book(pair, opts={})
+      opts['pair'] = pair
       get_public 'Depth', opts
     end
 
-    # must pass asset pair
-
-    def trades(opts={})
+    def trades(pair, opts={})
+      opts['pair'] = pair
       get_public 'Trades', opts
     end
 
-    # must pass asset pair
-
-    def spread(opts={})
+    def spread(pair, opts={})
+      opts['pair'] = pair
       get_public 'Spread', opts
     end
 
@@ -68,5 +54,11 @@ module Kraken
       hash = Hashie::Mash.new(JSON.parse(r.body))
       hash[:result]
     end
+
+    ###############################
+    ###### Private Data: ##########
+    ### Coming in Next Release ####
+    ###############################
+
   end
 end
