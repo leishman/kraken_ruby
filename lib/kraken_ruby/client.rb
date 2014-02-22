@@ -1,5 +1,6 @@
 require 'kraken_ruby/version'
 require 'httparty'
+require 'hashie'
 
 module Kraken
   class Client
