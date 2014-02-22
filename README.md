@@ -1,6 +1,10 @@
 # KrakenRuby
 
-TODO: Write a gem description
+This gem is a wrapper for the [Kraken Digital Asset Trading Platform](https://www.kraken.com). 
+
+The current version (0.1.0) can only be used for querying public market information. The next version of the gem will allow for access to private account information.
+
+Below are the instructions for installing and using the gem.
 
 ## Installation
 
@@ -18,8 +22,74 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Create a Kraken client:
 
+```ruby
+API_KEY = '3bH+M/nLp......'
+API_SECRET = 'wQG+7Lr9b.....'
+
+kraken = Kraken::Client.new(API_KEY, API_SECRET)
+
+time = kraken.server_time
+time.unixtime #=> 1393056191
+```
+
+### Public Data Methods
+
+#### Server Time
+
+This functionality is provided by Kraken to to aid in approximating the skew time between the server and client.
+
+```ruby
+time = kraken.server_time
+
+time.unixtime #=> 1393056191
+time.rfc1123 #=> "Sat, 22 Feb 2014 08:28:04 GMT"
+```
+
+#### Asset Info
+
+Returns the assets that can be traded on the exchange. This method can be passed ```info```, ```aclass``` (asset class), and ```asset``` options. An example below is given for each:
+
+```ruby
+kraken.assets
+```
+
+#### Asset Pairs
+
+```ruby
+pairs = kraken.asset_pairs
+```
+
+#### Ticker Information
+
+```ruby
+ticker_data = kraken.ticker('XLTCXXDG, ZUSDXXVN')
+```
+
+#### Order Book
+
+Get market depth information for given asset pairs
+
+```ruby
+depth_data = kraken.order_book('LTCXRP')
+```
+
+#### Trades
+
+Get recent trades
+
+```ruby
+trades = kraken.trades('LTCXRP')
+```
+
+#### Spread
+
+Get spread data for a given asset pair
+
+```ruby
+spread = kraken.spread('LTCXRP')
+```
 ## Contributing
 
 1. Fork it
