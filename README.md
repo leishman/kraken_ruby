@@ -38,6 +38,8 @@ time.unixtime #=> 1393056191
 
 #### Server Time
 
+This functionality is provided by Kraken to to aid in approximating the skew time between the server and client.
+
 ```ruby
 time = kraken.server_time
 
