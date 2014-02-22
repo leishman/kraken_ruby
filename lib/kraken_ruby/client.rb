@@ -45,6 +45,7 @@ module Kraken
     # must give asset pair
     # optional count
     # example opts: { pair: 'LTCXRP', count: 5}
+    
     def order_book(opts={})
       get_public 'Depth', opts
     end
