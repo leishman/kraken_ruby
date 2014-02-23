@@ -87,23 +87,41 @@ module Kraken
 
       #### IN PROGRESS #######
     def post_private(method, opts={})
+
+      # define path
+
       urlpath = '/' + @api_version + '/private/' + method
 
-      key_b64 = Base64.decode64(@api_secret)
-      opts['nonce'] = Time.now.to_i * 10_000_000_000
+      # create nonce
+
+      # opts['nonce'] = Time.now.to_i.to_s.ljust(16,'0')
+      opts['nonce'] = '1393181048417996'
+
+      # encode post data (nonce only)
 
       post_data = encode_options(opts)
-      opt_digest = OpenSSL::Digest.new('sha256', opts['nonce'].to_s + post_data).digest
+
+      # decode base 64 key
+
+      key = Base64.decode64(@api_secret)
+
+      # create digest of nonce + post data
+
+      opt_digest = OpenSSL::Digest.new('sha256', opts['nonce'] + post_data).digest
+
+      # create message: urlpath + SHA256(nonce + post_data)
+
       message = urlpath + opt_digest
-      digest = OpenSSL::Digest::Digest.new('sha512')
-      signature = OpenSSL::HMAC.digest(digest, key_b64, message)
 
+      # create auth code
+
+      signature = Base64.encode64("#{OpenSSL::HMAC.digest('sha512', key, message)}").strip
+      
       headers = {
-        'User-Agent' => 'leishman',
         'API-Key' => @api_key,
-        'API-Sign' => Base64.encode64(signature)
+        'API-Sign' => signature
       }
-
+      
       url = @base_uri + @api_version + '/private/' + method
       self.class.post(url, { headers: headers, body: post_data })
     end
