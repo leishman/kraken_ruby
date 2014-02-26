@@ -18,12 +18,12 @@ Gem::Specification.new do |spec|
   spec.test_files    = spec.files.grep(%r{^(test|spec|features)/})
   spec.require_paths = ["lib"]
 
-  gem.add_development_dependency "bundler", "~> 1.3"
-  gem.add_development_dependency "rake"
-  gem.add_development_dependency "rspec"
+  spec.add_development_dependency "bundler", "~> 1.3"
+  spec.add_development_dependency "rake"
+  spec.add_development_dependency "rspec"
 
-  gem.add_dependency "httparty"
-  gem.add_dependency "hashie"
-  gem.add_dependency "Base64"
-  gem.add_dependency "addressable/uri"
+  spec.add_dependency "httparty"
+  spec.add_dependency "hashie"
+  spec.add_dependency "Base64"
+  spec.add_dependency "addressable/uri"
 end
