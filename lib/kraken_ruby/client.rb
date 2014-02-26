@@ -1,10 +1,7 @@
 require 'httparty'
-require 'securerandom'
 require 'hashie'
 require 'Base64'
-require 'open-uri'
 require 'addressable/uri'
-
 
 module Kraken
   class Client
@@ -14,7 +11,7 @@ module Kraken
       @api_key      = api_key
       @api_secret   = api_secret
       @api_version  = options[:version] ||= '0'
-      @base_uri     = options[:base_uri] ||= 'https://api.kraken.com/'
+      @base_uri     = options[:base_uri] ||= 'https://api.kraken.com'
     end
 
     ###########################
@@ -54,7 +51,7 @@ module Kraken
     end
 
     def get_public(method, opts={})
-      url = @base_uri + @api_version + '/public/' + method
+      url = @base_uri + '/' + @api_version + '/public/' + method
       r = self.class.get(url, query: opts)
       hash = Hashie::Mash.new(JSON.parse(r.body))
       hash[:result]
@@ -108,7 +105,7 @@ module Kraken
       post_private 'TradeVolume', opts
     end
 
-    #### Private User Trading ####
+    #### Private User Trading (Still experimental!) ####
 
     def add_order(opts={})
       required_opts = %w{pair, type, ordertype, volume}
@@ -125,46 +122,50 @@ module Kraken
     ##### Post Request ####
     #######################
 
-    def encode_options(opts)
-      uri = Addressable::URI.new
-      uri.query_values = opts
-      uri.query
-    end
+    private
 
-    def generate_nonce
-      Time.now.to_i.to_s.ljust(16,'0')
-    end
+      def post_private(method, opts={})
+        opts['nonce'] = nonce
+        post_data = encode_options(opts)
 
-    def url_path(method)
-      '/' + @api_version + '/private/' + method
-    end
+        headers = {
+          'API-Key' => @api_key,
+          'API-Sign' => generate_signature(method, post_data, opts) 
+        }
 
-    def generate_message(method, opts, data)
-      digest = OpenSSL::Digest.new('sha256', opts['nonce'] + data).digest
-      url_path(method) + digest
-    end
+        url = @base_uri + url_path(method)
+        r = self.class.post(url, { headers: headers, body: post_data }).parsed_response
+        r['error'].empty? ? r['result'] : r['error']
+      end
 
-    def generate_hmac
-      Base64.encode64(OpenSSL::HMAC.digest('sha512', key, message)).split.join # to remove '/n' inserted into signature by HMAc
-    end
+      def nonce
+        Time.now.to_i.to_s.ljust(16,'0')
+      end
 
-    def generate_signature(method, opts={})
-      key = Base64.decode64(@api_secret)
-      message = generate_message(method, opts, post_data)
-      generate_hmac(key, message)
-    end
+      def encode_options(opts)
+        uri = Addressable::URI.new
+        uri.query_values = opts
+        uri.query
+      end
 
-    def post_private(method, opts={})
-      opts['nonce'] = generate_nonce
-      post_data = encode_options(opts)
+      def generate_signature(method, post_data, opts={})
+        key = Base64.decode64(@api_secret)
+        message = generate_message(method, opts, post_data)
+        generate_hmac(key, message)
+      end
 
-      headers = {
-        'API-Key' => @api_key,
-        'API-Sign' => generate_signature(method, opts) 
-      }
+      def generate_message(method, opts, data)
+        digest = OpenSSL::Digest.new('sha256', opts['nonce'] + data).digest
+        url_path(method) + digest
+      end
 
-      url = @base_uri + url_path(method)
-      self.class.post(url, { headers: headers, body: post_data })
-    end
+      def generate_hmac(key, message)
+        Base64.encode64(OpenSSL::HMAC.digest('sha512', key, message)).split.join # to remove '/n' inserted into signature by HMAc
+      end
+
+      def url_path(method)
+        '/' + @api_version + '/private/' + method
+      end
+
   end
 end
