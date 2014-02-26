@@ -24,6 +24,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "httparty"
   spec.add_dependency "hashie"
-  spec.add_dependency "Base64"
-  spec.add_dependency "addressable/uri"
+  spec.add_dependency "addressable"
 end

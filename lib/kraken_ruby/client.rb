@@ -3,6 +3,7 @@ require 'hashie'
 require 'Base64'
 require 'addressable/uri'
 
+
 module Kraken
   class Client
     include HTTParty
