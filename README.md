@@ -8,9 +8,9 @@ PLEASE submit an issue or pull request if you notice any bugs, security holes, o
 
 ### Description
 
-This gem is a wrapper for the [Kraken Digital Asset Trading Platform](https://www.kraken.com). 
+This gem is a wrapper for the [Kraken Digital Asset Trading Platform](https://www.kraken.com) API. Official documentation from Kraken can be found [here](https://www.kraken.com/help/api).
 
-The current version (0.2.0) can only be used to query public and private market data. Private data requires use of your account API keys.
+The current version (0.2.0) can only be used to query public and private market data. Private data queries require use of your account API keys.
 
 Below are the instructions for installing and using the gem.
 
@@ -98,6 +98,87 @@ Get spread data for a given asset pair
 ```ruby
 spread = kraken.spread('LTCXRP')
 ```
+
+### Private Data Methods
+
+#### Balance
+
+Get account balance for each asset
+Note: Rates used for the floating valuation is the midpoint of the best bid and ask prices
+
+```ruby
+balance = kraken.balance
+```
+
+#### Trade Balance
+
+Get account trade balance
+
+```ruby
+trade_balance = kraken.trade_balance
+```
+
+#### Open Orders
+
+```ruby
+open_orders = kraken.open_orders
+```
+
+#### Query Orders
+
+See all orders
+
+```ruby
+orders = kraken.query_orders
+```
+
+#### Trades History
+
+Get array of all trades
+
+```ruby
+trades = kraken.trade_history
+```
+
+#### Query Trades
+
+**Input:** Comma delimited list of transaction (tx) ids
+
+```ruby
+trades = kraken.query_trades(tx_ids)
+```
+
+#### Open Positions
+
+**Input:** Comma delimited list of transaction (tx) ids
+
+```ruby
+positions = kraken.open_positions(tx_ids)
+```
+
+#### Ledgers Info
+
+```ruby
+ledgers = kraken.ledgers_info
+```
+
+#### Ledgers Info
+
+**Input:** Comma delimited list of ledger ids
+
+```ruby
+ledgers = kraken.query_ledgers(ledger_ids)
+```
+
+#### Trade Volume
+
+**Input:** Comma delimited list of asset pairs
+
+```ruby
+asset_pairs = 'XLTCXXDG, ZEURXXDG'
+volume = kraken.query_ledgers(asset_pairs)
+```
+
 ## Contributing
 
 1. Fork it
