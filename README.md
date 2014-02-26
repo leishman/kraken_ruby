@@ -1,8 +1,16 @@
 # KrakenRuby
 
+### IMPORTANT
+
+This gem is currently built to only query data. There is an experimental ```add_order``` trading method that can be used at **your own risk**. Please thoroughly vet everything in the code for yourself before using this gem to buy, sell, or move any of your assets. 
+
+PLEASE submit an issue or pull request if you notice any bugs, security holes, or potential improvements.
+
+### Description
+
 This gem is a wrapper for the [Kraken Digital Asset Trading Platform](https://www.kraken.com). 
 
-The current version (0.1.0) can only be used for querying public market information. The next version of the gem will allow for access to private account information.
+The current version (0.2.0) can only be used to query public and private market data. Private data requires use of your account API keys.
 
 Below are the instructions for installing and using the gem.
 
