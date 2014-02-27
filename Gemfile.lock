@@ -2,12 +2,14 @@ PATH
   remote: .
   specs:
     kraken_ruby (0.2.0)
+      addressable
       hashie
       httparty
 
 GEM
   remote: https://rubygems.org/
   specs:
+    addressable (2.3.5)
     diff-lcs (1.2.5)
     hashie (2.0.5)
     httparty (0.12.0)
@@ -30,6 +32,8 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.3)
+  hashie
+  httparty
   kraken_ruby!
   rake
   rspec

@@ -161,7 +161,7 @@ module Kraken
       end
 
       def generate_hmac(key, message)
-        Base64.encode64(OpenSSL::HMAC.digest('sha512', key, message)).split.join # to remove '/n' inserted into signature by HMAc
+        Base64.strict_encode64(OpenSSL::HMAC.digest('sha512', key, message))
       end
 
       def url_path(method)
