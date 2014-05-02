@@ -1,6 +1,6 @@
 require 'httparty'
 require 'hashie'
-require 'Base64'
+require 'base64'
 require 'addressable/uri'
 
 
