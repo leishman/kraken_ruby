@@ -5,8 +5,8 @@ describe Kraken::Client do
 	# YOU MUST REPLACE THE PLACEHOLDERS BELOW WITH YOUR API KEYS 
 	# TO TEST PRIVATE DATA QUERIES. PRIVATE TESTS WILL FAIL OTHERWISE
 
-	API_KEY = 'ADD YOUR KEY HERE'
-	API_SECRET = 'ADD YOUR SECRET HERE'
+  API_KEY = 'ADD YOUR KEY HERE'
+  API_SECRET = 'ADD YOUR SECRET HERE'
 
 	before :each do
 		sleep 0.3 # to prevent rapidly pinging the Kraken server
@@ -56,6 +56,12 @@ describe Kraken::Client do
 		it "gets the user's balance" do
 			expect(kraken.balance).to be_instance_of(Hash)
 		end
+
+    it "uses a 64 bit nonce" do
+      nonce = kraken.send :nonce
+      expect(nonce.to_i.bit_length).to eq(63)
+      expect(nonce.to_i).to be_instance_of(Bignum)
+    end
 	end
 
 end

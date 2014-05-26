@@ -139,9 +139,14 @@ module Kraken
         r['error'].empty? ? r['result'] : r['error']
       end
 
+      # Generate a 64-bit nonce where the 32 high bits come directly from the current
+      # timestamp and the low 32 bits are pseudorandom. We can't use a pure [P]RNG here
+      # because the Kraken API requires every request within a given session to use a
+      # monotonically increasing nonce value. This approach splits the difference.
       def nonce
-        len = 16
-        SecureRandom.random_number(10 ** len).to_s.ljust(len, '0')
+        high_bits = Time.now.to_i << 32
+        low_bits  = SecureRandom.random_number(2 ** 32) & 0xffffffff
+        (high_bits | low_bits).to_s
       end
 
       def encode_options(opts)
