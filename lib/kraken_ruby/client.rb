@@ -140,7 +140,8 @@ module Kraken
       end
 
       def nonce
-        Time.now.to_i.to_s.ljust(16,'0')
+        len = 16
+        SecureRandom.random_number(10 ** len).to_s.ljust(len, '0')
       end
 
       def encode_options(opts)
