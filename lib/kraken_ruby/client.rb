@@ -35,7 +35,7 @@ module Kraken
       opts = { 'pair' => pairs }
       get_public 'Ticker', opts
     end
-    
+
     def order_book(pair, opts={})
       opts['pair'] = pair
       get_public 'Depth', opts
@@ -111,7 +111,7 @@ module Kraken
     def add_order(opts={})
       required_opts = %w{pair, type, ordertype, volume}
       opts.keys.each do |key|
-        unless required_opts.include?(1) 
+        unless required_opts.include?(1)
           raise "Required options, not given. Input must include #{required_opts}"
         end
       end
@@ -131,7 +131,7 @@ module Kraken
 
         headers = {
           'API-Key' => @api_key,
-          'API-Sign' => generate_signature(method, post_data, opts) 
+          'API-Sign' => generate_signature(method, post_data, opts)
         }
 
         url = @base_uri + url_path(method)
@@ -173,6 +173,5 @@ module Kraken
       def url_path(method)
         '/' + @api_version + '/private/' + method
       end
-
   end
 end
