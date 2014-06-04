@@ -53,7 +53,7 @@ describe Kraken::Client do
 		end
 	end
 
-	context "private data" do # More tests to come		
+	context "private data" do # More tests to come
 		it "gets the user's balance" do
 			expect(kraken.balance).to be_instance_of(Hash)
 		end
