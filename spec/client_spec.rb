@@ -60,7 +60,7 @@ describe Kraken::Client do
 
     it "uses a 64 bit nonce" do
       nonce = kraken.send :nonce
-      expect(nonce.to_i.bit_length).to eq(63)
+      expect(nonce.to_i.size).to eq(8)
       expect(nonce.to_i).to be_instance_of(Bignum)
     end
 	end
