@@ -118,6 +118,11 @@ module Kraken
       post_private 'AddOrder', opts
     end
 
+    def cancel_order(txid)
+      opts = { txid: txid }
+      post_private 'CancelOrder', opts
+    end
+
     #######################
     #### Generate Signed ##
     ##### Post Request ####
