@@ -1,8 +1,8 @@
+require 'base64'
+require 'securerandom'
+require 'addressable/uri'
 require 'httparty'
 require 'hashie'
-require 'base64'
-require 'addressable/uri'
-
 
 module Kraken
   class Client
@@ -106,16 +106,20 @@ module Kraken
       post_private 'TradeVolume', opts
     end
 
-    #### Private User Trading (Still experimental!) ####
+    #### Private User Trading ####
 
     def add_order(opts={})
-      required_opts = %w{pair, type, ordertype, volume}
-      opts.keys.each do |key|
-        unless required_opts.include?(1)
-          raise "Required options, not given. Input must include #{required_opts}"
-        end
+      required_opts = %w{ pair type ordertype volume }
+      leftover = required_opts - opts.keys.map(&:to_s)
+      if leftover.length > 0
+        raise ArgumentError.new("Required options, not given. Input must include #{leftover}")
       end
       post_private 'AddOrder', opts
+    end
+
+    def cancel_order(txid)
+      opts = { txid: txid }
+      post_private 'CancelOrder', opts
     end
 
     #######################
