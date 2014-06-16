@@ -106,7 +106,7 @@ module Kraken
       post_private 'TradeVolume', opts
     end
 
-    #### Private User Trading (Still experimental!) ####
+    #### Private User Trading ####
 
     def add_order(opts={})
       required_opts = %w{ pair type ordertype volume }
