@@ -183,6 +183,30 @@ asset_pairs = 'XLTCXXDG, ZEURXXDG'
 volume = kraken.query_ledgers(asset_pairs)
 ```
 
+### Adding and Cancelling Orders
+
+#### Add Order
+
+There are 4 required parameters for buying an order. The example below illustrates the most basic order. Please see the [Kraken documentation](https://www.kraken.com/help/api#add-standard-order) for the parameters required for more advanced order types.
+```ruby
+# buying 0.01 XBT (bitcoin) for XRP (ripple) at market price
+opts = {
+  pair: 'XBTXRP',
+  type: 'buy',
+  ordertype: 'market',
+  volume: 0.01
+}
+
+kraken.add_order(opts)
+
+```
+
+#### Cancel Order
+
+```ruby
+kraken.cancel_order("UKIYSP-9VN27-AJWWYC")
+```
+
 ## Contributing
 
 1. Fork it
