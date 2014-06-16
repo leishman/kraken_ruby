@@ -1,9 +1,8 @@
+require 'base64'
+require 'securerandom'
+require 'addressable/uri'
 require 'httparty'
 require 'hashie'
-require 'base64'
-require 'addressable/uri'
-require 'securerandom'
-
 
 module Kraken
   class Client
