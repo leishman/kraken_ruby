@@ -2,7 +2,7 @@
 
 ### IMPORTANT
 
-This gem is currently built to only query data. There is an experimental ```add_order``` trading method that can be used at **your own risk**. Please thoroughly vet everything in the code for yourself before using this gem to buy, sell, or move any of your assets.
+Please thoroughly vet everything in the code for yourself before using this gem to buy, sell, or move any of your assets.
 
 PLEASE submit an issue or pull request if you notice any bugs, security holes, or potential improvements.
 
@@ -10,11 +10,10 @@ PLEASE submit an issue or pull request if you notice any bugs, security holes, o
 
 This gem is a wrapper for the [Kraken Digital Asset Trading Platform](https://www.kraken.com) API. Official documentation from Kraken can be found [here](https://www.kraken.com/help/api).
 
-The current version (0.2.0) can be used to query public and private market data. Private data queries require use of your account API keys.
+The current version (0.4.1) can be used to query public/private data and make trades. Private data queries and trading functionality require use of your Kraken account API keys.
 
 ### Pending Future Updates
 
-- Solid trade execution functionality
 - More comprehensive test suite for methods requiring authentication (using VCR perhaps)
 - More comprehensive documentation
 
