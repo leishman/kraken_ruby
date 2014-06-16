@@ -2,7 +2,7 @@
 
 ### IMPORTANT
 
-This gem is currently built to only query data. There is an experimental ```add_order``` trading method that can be used at **your own risk**. Please thoroughly vet everything in the code for yourself before using this gem to buy, sell, or move any of your assets. 
+This gem is currently built to only query data. There is an experimental ```add_order``` trading method that can be used at **your own risk**. Please thoroughly vet everything in the code for yourself before using this gem to buy, sell, or move any of your assets.
 
 PLEASE submit an issue or pull request if you notice any bugs, security holes, or potential improvements.
 
