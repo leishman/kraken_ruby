@@ -1,5 +1,5 @@
-[![Gem Version](https://badge.fury.io/rb/kraken_ruby.svg)](http://badge.fury.io/rb/kraken_ruby)
 # KrakenRuby
+[![Gem Version](https://badge.fury.io/rb/kraken_ruby.svg)](http://badge.fury.io/rb/kraken_ruby)
 
 ### IMPORTANT
 
