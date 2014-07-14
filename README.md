@@ -10,7 +10,7 @@ PLEASE submit an issue or pull request if you notice any bugs, security holes, o
 
 This gem is a wrapper for the [Kraken Digital Asset Trading Platform](https://www.kraken.com) API. Official documentation from Kraken can be found [here](https://www.kraken.com/help/api).
 
-The current version (0.4.1) can be used to query public/private data and make trades. Private data queries and trading functionality require use of your Kraken account API keys.
+The current version (0.4.2) can be used to query public/private data and make trades. Private data queries and trading functionality require use of your Kraken account API keys.
 
 ### Pending Future Updates
 
