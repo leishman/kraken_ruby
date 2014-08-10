@@ -5,7 +5,7 @@
 
 Please thoroughly vet everything in the code for yourself before using this gem to buy, sell, or move any of your assets.
 
-PLEASE submit an issue or pull request if you notice any bugs, security holes, or potential improvements.
+PLEASE submit an issue or pull request if you notice any bugs, security holes, or potential improvements. Any help is appreciated!
 
 ### Description
 
