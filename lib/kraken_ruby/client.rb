@@ -74,6 +74,10 @@ module Kraken
       post_private 'OpenOrders', opts
     end
 
+    def closed_orders(opts={})
+      post_private 'ClosedOrders', opts
+    end
+
     def query_orders(opts={})
       post_private 'QueryOrders', opts
     end
