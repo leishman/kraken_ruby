@@ -24,32 +24,32 @@ describe Kraken::Client do
 		end
 
 		it "gets list of tradeable assets" do
-			expect(kraken.assets).to respond_to :XLTC
+			expect(kraken.assets).to respond_to :XXBT
 		end
 
 		it "gets list of asset pairs" do
-			expect(kraken.asset_pairs).to respond_to :XLTCXXDG
+			expect(kraken.asset_pairs).to respond_to :XXBTZEUR
 		end
 
 		it "gets public ticker data for given asset pairs" do
-			result = kraken.ticker('XLTCXXDG, ZEURXXDG')
-			expect(result).to respond_to :XLTCXXDG
-			expect(result).to respond_to :ZEURXXDG
+			result = kraken.ticker('XXBTZEUR, XXBTZGBP')
+			expect(result).to respond_to :XXBTZEUR
+			expect(result).to respond_to :XXBTZGBP
 		end
 
 		it "gets order book data for a given asset pair" do
-			order_book = kraken.order_book('XLTCXXDG')
-			expect(order_book.XLTCXXDG).to respond_to :asks
+			order_book = kraken.order_book('XXBTZEUR')
+			expect(order_book.XXBTZEUR).to respond_to :asks
 		end
 
 		it "gets an array of trades data for a given asset pair" do
-			trades = kraken.trades('XLTCXXDG')
-			expect(trades.XLTCXXDG).to be_instance_of(Array)
+			trades = kraken.trades('XXBTZEUR')
+			expect(trades.XXBTZEUR).to be_instance_of(Array)
 		end
 
 		it "gets an array of spread data for a given asset pair" do
-			spread = kraken.spread('XLTCXXDG')
-			expect(spread.XLTCXXDG).to be_instance_of(Array)
+			spread = kraken.spread('XXBTZEUR')
+			expect(spread.XXBTZEUR).to be_instance_of(Array)
 		end
 	end
 
