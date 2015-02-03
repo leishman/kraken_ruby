@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    kraken_ruby (0.4.1)
+    kraken_ruby (0.4.2)
       addressable
       hashie
       httparty
