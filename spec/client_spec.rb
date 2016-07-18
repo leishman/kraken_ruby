@@ -62,6 +62,45 @@ describe Kraken::Client do
       nonce = kraken.send :nonce
       expect(nonce.to_i.size).to eq(8)
     end
-	end
 
+    it "gets deposit methods" do
+      result = kraken.deposit_methods("XXBT").first
+      expect(result).to have_key 'method'
+      expect(result).to have_key 'limit'
+      expect(result).to have_key 'fee'
+    end
+
+    it "gets deposit status" do
+      results = kraken.deposit_status(asset: "XXBT")
+      expect(results).to be_instance_of(Array)
+      if result = results.first
+        expect(result).to have_key 'method'
+        expect(result).to have_key 'aclass'
+        expect(result).to have_key 'refid'
+        expect(result).to have_key 'txid'
+        expect(result).to have_key 'info'
+        expect(result).to have_key 'amount'
+        expect(result).to have_key 'fee'
+        expect(result).to have_key 'status'
+        expect(result).to have_key 'time'
+      end
+    end
+
+    it "gets withdraw status" do
+      results = kraken.withdraw_status(asset: "XXBT")
+      pp results
+      expect(results).to be_instance_of(Array)
+      if result = results.first
+        expect(result).to have_key 'method'
+        expect(result).to have_key 'aclass'
+        expect(result).to have_key 'refid'
+        expect(result).to have_key 'txid'
+        expect(result).to have_key 'info'
+        expect(result).to have_key 'amount'
+        expect(result).to have_key 'fee'
+        expect(result).to have_key 'status'
+        expect(result).to have_key 'time'
+      end
+    end
+  end
 end
