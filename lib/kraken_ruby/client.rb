@@ -115,6 +115,10 @@ module Kraken
       post_private 'DepositMethods', opts
     end
 
+    def deposit_status(opts={})
+      post_private 'DepositStatus', opts
+    end
+
     #### Private User Trading ####
 
     def add_order(opts={})
