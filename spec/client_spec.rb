@@ -62,6 +62,13 @@ describe Kraken::Client do
       nonce = kraken.send :nonce
       expect(nonce.to_i.size).to eq(8)
     end
+
+    it "gets deposit methods" do
+      result = kraken.deposit_methods("XXBT").first
+      expect(result).to have_key 'method'
+      expect(result).to have_key 'limit'
+      expect(result).to have_key 'fee'
+    end
 	end
 
 end
