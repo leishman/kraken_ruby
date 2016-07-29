@@ -88,7 +88,6 @@ describe Kraken::Client do
 
     it "gets withdraw status" do
       results = kraken.withdraw_status(asset: "XXBT")
-      pp results
       expect(results).to be_instance_of(Array)
       if result = results.first
         expect(result).to have_key 'method'
