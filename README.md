@@ -192,6 +192,41 @@ asset_pairs = 'XLTCXXDG, ZEURXXDG'
 volume = kraken.query_ledgers(asset_pairs)
 ```
 
+#### Get deposit methods
+
+**Input:** asset being deposited
+
+```ruby
+asset = 'XXBT'
+deposit_methods = kraken.deposit_methods(asset)
+```
+
+#### Get status of recent deposits
+
+**Input:** options hash: asset: asset being deposited, method: name of the deposit method (optional)
+
+```ruby
+opts = {
+  asset: 'XXBT',
+  method: 'Bitcoin' # Optional
+}
+deposit_status = kraken.deposit_status(opts)
+```
+
+#### Get status of recent withdrawals
+
+**Important**: due to a bug in Kraken's API, this endpoint requires an API token that has "Withdraw funds" Key Permission instead of "Query funds", otherwise an "EGeneral:Permission denied" Error will be raised.
+
+**Input:** options hash: asset: asset being withdrawn, method: withdrawal method name (optional)
+
+```ruby
+opts = {
+  asset: 'XXBT',
+  method: 'Bitcoin' # Optional
+}
+withdraw_status = kraken.withdraw_status(opts)
+```
+
 ### Adding and Cancelling Orders
 
 #### Add Order
