@@ -110,6 +110,19 @@ module Kraken
       post_private 'TradeVolume', opts
     end
 
+    def deposit_methods(asset, opts={})
+      opts['asset'] = asset
+      post_private 'DepositMethods', opts
+    end
+
+    def deposit_status(opts={})
+      post_private 'DepositStatus', opts
+    end
+
+    def withdraw_status(opts={})
+      post_private 'WithdrawStatus', opts
+    end
+
     #### Private User Trading ####
 
     def add_order(opts={})

@@ -7,11 +7,14 @@ Please thoroughly vet everything in the code for yourself before using this gem 
 
 PLEASE submit an issue or pull request if you notice any bugs, security holes, or potential improvements. Any help is appreciated!
 
+
 ### Description
 
 This gem is a wrapper for the [Kraken Digital Asset Trading Platform](https://www.kraken.com) API. Official documentation from Kraken can be found [here](https://www.kraken.com/help/api).
 
-The current version (0.4.2) can be used to query public/private data and make trades. Private data queries and trading functionality require use of your Kraken account API keys.
+The current version (0.5.0) can be used to query public/private data and make trades. Private data queries and trading functionality require use of your Kraken account API keys.
+
+Kraken Ruby was built by [Alex Leishman](http://alexleishman.com) and other [awesome contributors](https://github.com/leishman/kraken_ruby/graphs/contributors).
 
 ### Pending Future Updates
 
@@ -126,6 +129,12 @@ trade_balance = kraken.trade_balance
 
 ```ruby
 open_orders = kraken.open_orders
+```
+
+#### Closed Orders
+
+```ruby
+closed_orders = kraken.closed_orders
 ```
 
 #### Query Orders

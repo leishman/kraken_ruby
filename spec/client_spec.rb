@@ -24,32 +24,32 @@ describe Kraken::Client do
 		end
 
 		it "gets list of tradeable assets" do
-			expect(kraken.assets).to respond_to :XLTC
+			expect(kraken.assets).to respond_to :XXBT
 		end
 
 		it "gets list of asset pairs" do
-			expect(kraken.asset_pairs).to respond_to :XLTCXXDG
+			expect(kraken.asset_pairs).to respond_to :XXBTZEUR
 		end
 
 		it "gets public ticker data for given asset pairs" do
-			result = kraken.ticker('XLTCXXDG, ZEURXXDG')
-			expect(result).to respond_to :XLTCXXDG
-			expect(result).to respond_to :ZEURXXDG
+			result = kraken.ticker('XXBTZEUR, XXBTZGBP')
+			expect(result).to respond_to :XXBTZEUR
+			expect(result).to respond_to :XXBTZGBP
 		end
 
 		it "gets order book data for a given asset pair" do
-			order_book = kraken.order_book('XLTCXXDG')
-			expect(order_book.XLTCXXDG).to respond_to :asks
+			order_book = kraken.order_book('XXBTZEUR')
+			expect(order_book.XXBTZEUR).to respond_to :asks
 		end
 
 		it "gets an array of trades data for a given asset pair" do
-			trades = kraken.trades('XLTCXXDG')
-			expect(trades.XLTCXXDG).to be_instance_of(Array)
+			trades = kraken.trades('XXBTZEUR')
+			expect(trades.XXBTZEUR).to be_instance_of(Array)
 		end
 
 		it "gets an array of spread data for a given asset pair" do
-			spread = kraken.spread('XLTCXXDG')
-			expect(spread.XLTCXXDG).to be_instance_of(Array)
+			spread = kraken.spread('XXBTZEUR')
+			expect(spread.XXBTZEUR).to be_instance_of(Array)
 		end
 	end
 
@@ -61,8 +61,46 @@ describe Kraken::Client do
     it "uses a 64 bit nonce" do
       nonce = kraken.send :nonce
       expect(nonce.to_i.size).to eq(8)
-      expect(nonce.to_i).to be_instance_of(Bignum)
     end
-	end
 
+    it "gets deposit methods" do
+      result = kraken.deposit_methods("XXBT").first
+      expect(result).to have_key 'method'
+      expect(result).to have_key 'limit'
+      expect(result).to have_key 'fee'
+    end
+
+    it "gets deposit status" do
+      results = kraken.deposit_status(asset: "XXBT")
+      expect(results).to be_instance_of(Array)
+      if result = results.first
+        expect(result).to have_key 'method'
+        expect(result).to have_key 'aclass'
+        expect(result).to have_key 'refid'
+        expect(result).to have_key 'txid'
+        expect(result).to have_key 'info'
+        expect(result).to have_key 'amount'
+        expect(result).to have_key 'fee'
+        expect(result).to have_key 'status'
+        expect(result).to have_key 'time'
+      end
+    end
+
+    it "gets withdraw status" do
+      results = kraken.withdraw_status(asset: "XXBT")
+      pp results
+      expect(results).to be_instance_of(Array)
+      if result = results.first
+        expect(result).to have_key 'method'
+        expect(result).to have_key 'aclass'
+        expect(result).to have_key 'refid'
+        expect(result).to have_key 'txid'
+        expect(result).to have_key 'info'
+        expect(result).to have_key 'amount'
+        expect(result).to have_key 'fee'
+        expect(result).to have_key 'status'
+        expect(result).to have_key 'time'
+      end
+    end
+  end
 end
