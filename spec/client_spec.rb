@@ -10,7 +10,7 @@ describe Kraken::Client do
   API_SECRET = ENV['KRAKEN_API_SECRET']
 
   before :each do
-    sleep 0.3 # to prevent rapidly pinging the Kraken server
+    sleep 3 # to prevent Kraken's "EGeneral:Temporary lockout" error
   end
 
   let(:kraken){Kraken::Client.new(API_KEY, API_SECRET)}
@@ -61,6 +61,24 @@ describe Kraken::Client do
     it "uses a 64 bit nonce" do
       nonce = kraken.send :nonce
       expect(nonce.to_i.size).to eq(8)
+    end
+
+    it "retries up to 5 times if nonce is invalid" do
+      expect(kraken).to receive(:post_private_request)
+        .exactly(Kraken::Client::RETRIES).times
+        .and_return('error' => [Kraken::Client::ERRORS[:invalid_nonce]])
+
+      expect(kraken.balance).to eq([Kraken::Client::ERRORS[:invalid_nonce]])
+
+      # when it works for the 5th time
+
+      error = {'error' => [Kraken::Client::ERRORS[:invalid_nonce]]}
+      success = {'result' => 'success'}
+
+      expect(kraken).to receive(:post_private_request)
+        .and_return(error, error, error, error, success)
+
+      expect(kraken.balance).to eq('success')
     end
 
     it "gets deposit methods" do

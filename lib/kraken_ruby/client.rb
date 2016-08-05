@@ -8,6 +8,11 @@ module Kraken
   class Client
     include HTTParty
 
+    RETRIES = (ENV['KRAKEN_API_RETRIES'] || 5).to_i
+    ERRORS = {
+      invalid_nonce: 'EAPI:Invalid nonce'
+    }
+
     def initialize(api_key=nil, api_secret=nil, options={})
       @api_key      = api_key
       @api_secret   = api_secret
@@ -146,7 +151,7 @@ module Kraken
 
     private
 
-      def post_private(method, opts={})
+      def post_private_request(method, opts)
         opts['nonce'] = nonce
         post_data = encode_options(opts)
 
@@ -156,8 +161,36 @@ module Kraken
         }
 
         url = @base_uri + url_path(method)
-        r = self.class.post(url, { headers: headers, body: post_data }).parsed_response
-        r['error'].empty? ? r['result'] : r['error']
+        self.class.post(url, { headers: headers, body: post_data }).parsed_response
+      end
+
+      def post_private(method, opts={})
+        tries = 1
+
+        while tries <= RETRIES
+
+          response = post_private_request(method,  opts)
+
+          if response['error'].nil? || response['error'].empty?
+            return response['result']
+          else
+            error = response['error']
+
+            # Contrary to their documentation, Kraken sometimes sends the error message as a String instead of an Array
+            # We keep using an array for compatibility
+            error = [error] if error.is_a?(String)
+
+            case error.first
+            when ERRORS[:invalid_nonce]
+              return error if tries >= RETRIES
+
+              tries += 1
+              sleep tries # Prevent Kraken's "EGeneral:Temporary lockout" error message
+            else
+              return error
+            end
+          end
+        end
       end
 
       # Generate a 61-bit nonce
