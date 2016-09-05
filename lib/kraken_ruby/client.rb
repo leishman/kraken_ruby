@@ -171,6 +171,12 @@ module Kraken
 
           response = post_private_request(method,  opts)
 
+          if response.nil? or response.is_a?(String)
+            tries += 1
+            sleep tries
+            next
+          end
+
           if response['error'].nil? || response['error'].empty?
             return response['result']
           else
@@ -191,6 +197,8 @@ module Kraken
             end
           end
         end
+
+        ["UnreliableKrakenAPIError: Tried 5 times without success. Request method: #{method} opts: #{opts} Last reponse: #{response.inspect}"]
       end
 
       # Generate a 61-bit nonce
