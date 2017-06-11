@@ -37,6 +37,11 @@ describe Kraken::Client do
 			expect(result).to respond_to :XXBTZGBP
 		end
 
+ 		it "gets ohlc data for a given asset pair" do
+			result = kraken.ohlc('XXBTZEUR')
+			expect(result).to respond_to :XXBTZEUR
+		end
+
 		it "gets order book data for a given asset pair" do
 			order_book = kraken.order_book('XXBTZEUR')
 			expect(order_book.XXBTZEUR).to respond_to :asks
