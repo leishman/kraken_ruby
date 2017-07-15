@@ -36,6 +36,13 @@ module Kraken
       get_public 'Ticker', opts
     end
 
+    def ohlc(pair, interval="1", since="", opts={})
+      opts['pair'] = pair
+      opts['interval'] = interval
+      opts['since'] = since
+      get_public 'OHLC', opts
+    end
+
     def order_book(pair, opts={})
       opts['pair'] = pair
       get_public 'Depth', opts
