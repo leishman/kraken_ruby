@@ -171,12 +171,6 @@ module Kraken
 
           response = post_private_request(method,  opts)
 
-          if response.nil? or response.is_a?(String)
-            tries += 1
-            sleep tries
-            next
-          end
-
           if response['error'].nil? || response['error'].empty?
             return response['result']
           else
