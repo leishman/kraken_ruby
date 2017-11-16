@@ -8,6 +8,11 @@ module Kraken
   class Client
     include HTTParty
 
+    RETRIES = (ENV['KRAKEN_API_RETRIES'] || 5).to_i
+    ERRORS = {
+      invalid_nonce: 'EAPI:Invalid nonce'
+    }
+
     def initialize(api_key=nil, api_secret=nil, options={})
       @api_key      = api_key
       @api_secret   = api_secret
@@ -110,6 +115,19 @@ module Kraken
       post_private 'TradeVolume', opts
     end
 
+    def deposit_methods(asset, opts={})
+      opts['asset'] = asset
+      post_private 'DepositMethods', opts
+    end
+
+    def deposit_status(opts={})
+      post_private 'DepositStatus', opts
+    end
+
+    def withdraw_status(opts={})
+      post_private 'WithdrawStatus', opts
+    end
+
     #### Private User Trading ####
 
     def add_order(opts={})
@@ -133,7 +151,7 @@ module Kraken
 
     private
 
-      def post_private(method, opts={})
+      def post_private_request(method, opts)
         opts['nonce'] = nonce
         post_data = encode_options(opts)
 
@@ -143,18 +161,45 @@ module Kraken
         }
 
         url = @base_uri + url_path(method)
-        r = self.class.post(url, { headers: headers, body: post_data }).parsed_response
-        r['error'].empty? ? r['result'] : r['error']
+        self.class.post(url, { headers: headers, body: post_data }).parsed_response
       end
 
-      # Generate a 64-bit nonce where the 48 high bits come directly from the current
-      # timestamp and the low 16 bits are pseudorandom. We can't use a pure [P]RNG here
-      # because the Kraken API requires every request within a given session to use a
-      # monotonically increasing nonce value. This approach splits the difference.
+      def post_private(method, opts={})
+        tries = 1
+
+        while tries <= RETRIES
+
+          response = post_private_request(method,  opts)
+
+          if response['error'].nil? || response['error'].empty?
+            return response['result']
+          else
+            error = response['error']
+
+            # Contrary to their documentation, Kraken sometimes sends the error message as a String instead of an Array
+            # We keep using an array for compatibility
+            error = [error] if error.is_a?(String)
+
+            case error.first
+            when ERRORS[:invalid_nonce]
+              return error if tries >= RETRIES
+
+              tries += 1
+              sleep tries # Prevent Kraken's "EGeneral:Temporary lockout" error message
+            else
+              return error
+            end
+          end
+        end
+
+        ["UnreliableKrakenAPIError: Tried 5 times without success. Request method: #{method} opts: #{opts} Last reponse: #{response.inspect}"]
+      end
+
+      # Generate a 61-bit nonce
+      # 51 bits would be enough but we padded with 10 bits
+      # so existing users won't have to create a new API key after an update
       def nonce
-        high_bits = (Time.now.to_f * 10000).to_i << 16
-        low_bits  = SecureRandom.random_number(2 ** 16) & 0xffff
-        (high_bits | low_bits).to_s
+        ((Time.now.to_f * 1000000).to_i << 10).to_s
       end
 
       def encode_options(opts)
