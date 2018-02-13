@@ -41,6 +41,11 @@ module Kraken
       get_public 'Depth', opts
     end
 
+    def ohlc(pair, opts={})
+      opts['pair'] = pair
+      get_public2 'OHLC', opts
+    end
+
     def trades(pair, opts={})
       opts['pair'] = pair
       get_public 'Trades', opts
@@ -56,6 +61,12 @@ module Kraken
       r = self.class.get(url, query: opts)
       hash = Hashie::Mash.new(JSON.parse(r.body))
       hash[:result]
+    end
+
+    def get_public2(method, opts={})
+      url = @base_uri + '/' + @api_version + '/public/' + method
+      r = self.class.get(url, query: opts)
+      hash = JSON.parse(r.body)
     end
 
     ######################
