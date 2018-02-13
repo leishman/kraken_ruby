@@ -41,6 +41,11 @@ module Kraken
       get_public 'Depth', opts
     end
 
+    def ohlc(pair, opts={})
+      opts['pair'] = pair
+      get_public 'OHLC', opts
+    end
+
     def trades(pair, opts={})
       opts['pair'] = pair
       get_public 'Trades', opts
